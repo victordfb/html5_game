@@ -1,0 +1,85 @@
+#arena {
+   text-align: center;
+   padding: 5px;
+   width: 805px;
+   height: 445px;
+}
+
+#copyright {
+   margin-top: -35px;
+   float: right;
+   margin-right: 12px;
+   padding: 2px;
+   color: blue;
+   text-shadow: 1px 1px 1px rgba(255,255,255,0.7);
+   font-size: 0.8em;
+}
+
+.explanation {
+   color: #ff0;
+   text-shadow: 1px 1px 1px rgba(0,0,0,1.0);
+   display: inline;
+   margin-top: 5px;
+   padding-right: 5px;
+   padding-left: 5px;
+   padding-bottom: 2px;
+}
+         
+#game-canvas {
+   border: 2px inset rgba(0,0,80,0.62);
+   -webkit-box-shadow: rgba(0,0,0,0.5) 8px 8px 16px;
+   -moz-box-shadow: rgba(0,0,0,0.5) 8px 8px 16px;
+   -o-box-shadow: rgba(0,0,0,0.5) 8px 8px 16px;
+   box-shadow: rgba(0,0,0,0.5) 8px 8px 16px;
+}
+
+#instructions {
+   height: 30px;
+   margin-right: 8px;
+   padding-top: 6px;
+   padding-left: 25px;
+
+   -webkit-transition: opacity 2s;
+   -moz-transition: opacity 2s;
+   -o-transition: opacity 2s;
+   transition: opacity 2s;
+
+   color: #ff0;
+   font-size: 1.05em;
+   opacity: 1.0;
+}
+
+.keys {
+   color: blue;
+   text-shadow: 1px 1px 1px rgba(255,255,0,1.0);
+   background: rgba(0,0,0,0.1);
+   border: thin solid rgba(0,0,0,0.20);
+   border-radius: 5px;
+   margin-left: 10px;
+   padding-right: 10px;
+   padding-left: 10px;
+   padding-bottom: 5px;
+   display: inline;
+}
+
+#sound-and-music {
+   position: absolute;
+   top: 495px;
+   margin-left: 10px;
+   color: #ff0;
+   text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+   background: rgba(0,0,0,0.1);
+   border-radius: 5px;
+   border: thin solid rgba(0,0,0,0.20);
+   padding-top: 2px;
+   padding-bottom: 2px;
+   z-index: 1;
+}
+
+#wrapper {
+   margin: 0 auto;
+   margin-top: 20px;
+   padding: 5px;
+   width: 817px;
+   height: 520px;
+}
