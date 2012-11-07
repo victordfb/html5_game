@@ -1,3 +1,25 @@
+function StageOne(){
+  return {
+	bgXAxis: 0,
+
+    incrementBgXAxis: function(val){
+		this.bgXAxis += val;
+	},
+    getBgXAxis: function(){
+		return this.bgXAxis;
+	},
+    startThreshold: function(){
+		return 300;
+	},
+	endThreshold: function(){
+		return 40;
+	},
+    background: function(){
+		return "images/background.png";
+	}
+  }
+}
+
 var canvas = document.getElementById('game-canvas'),
 context = canvas.getContext('2d'),
 lastAnimationFrameTime = 0,
@@ -7,19 +29,18 @@ fpsElement = document.getElementById("fps"),
 velocityPace = 290,
 runnerOffset = 40,
 bgXAxis = 0,
-stageStartThreshold = 300,
-stageEndThreshold = runnerOffset,
+stage = new StageOne(),
 background = new Image(),
 runnerImage = new Image();
 
 function drawBackground() {
-    context.drawImage(background, bgXAxis, 0);
+	context.drawImage(background, stage.getBgXAxis(), 0);
 }
 
 function moveToLeft(){
 	var pace = velocityPace/fps;
-	if(runnerOffset > stageStartThreshold){
-		bgXAxis -= pace;
+	if(runnerOffset > stage.startThreshold()){
+		stage.incrementBgXAxis(-pace);
 	}else{
 		runnerOffset += pace;
 	}
@@ -27,8 +48,8 @@ function moveToLeft(){
 
 function moveToRight(){
 	var pace = velocityPace/fps;
-	if(runnerOffset <= stageEndThreshold){
-		bgXAxis += pace;
+	if(runnerOffset <= stage.endThreshold()){
+		stage.incrementBgXAxis(pace);
 	}else{
 		runnerOffset -= pace;
 	}
@@ -61,11 +82,10 @@ function animate(now) {
 }
 
 function initializeImages() {
-    background.src = 'images/background.png';
+    background.src = stage.background();
     runnerImage.src = 'images/runner.png';
-
     background.onload = function(e){
-	startGame();
+	  startGame();
     }
 }
 
