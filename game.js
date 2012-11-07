@@ -6,19 +6,32 @@ fps = 60,
 fpsElement = document.getElementById("fps"),
 velocityPace = 290,
 runnerOffset = 40,
+bgXAxis = 0,
+stageStartThreshold = 300,
+stageEndThreshold = runnerOffset,
 background = new Image(),
 runnerImage = new Image();
 
 function drawBackground() {
-    context.drawImage(background, 0, 0);
+    context.drawImage(background, bgXAxis, 0);
 }
 
 function moveToLeft(){
-    runnerOffset += velocityPace/fps;
+	var pace = velocityPace/fps;
+	if(runnerOffset > stageStartThreshold){
+		bgXAxis -= pace;
+	}else{
+		runnerOffset += pace;
+	}
 }
 
 function moveToRight(){
-    runnerOffset -= velocityPace/fps;
+	var pace = velocityPace/fps;
+	if(runnerOffset <= stageEndThreshold){
+		bgXAxis += pace;
+	}else{
+		runnerOffset -= pace;
+	}
 }
 
 function drawRunner() {
@@ -48,7 +61,7 @@ function animate(now) {
 }
 
 function initializeImages() {
-    background.src = 'images/background_level_one_dark_red.png';
+    background.src = 'images/background.png';
     runnerImage.src = 'images/runner.png';
 
     background.onload = function(e){
