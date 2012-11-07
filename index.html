@@ -1,39 +1,22 @@
 <!DOCTYPE html>
 <html>
-   <!-- Head.........................................................-->
-
-   <head>
-      <title>Snail Bait</title>
-      <link rel='stylesheet' href='game.css'/>
-   </head>
-
-   <!-- Body.........................................................-->
-
-   <body>
-      <!-- Wrapper...................................................-->
-
-      <div id='wrapper'>
-         <!-- Header.................................................-->
-
-         <div id='header'>
-           <div id='score'>0</div>
-	   <div id='fps'>0</div>
-         </div>
-
-         <!-- Arena..................................................-->
-
-         <div id='arena'>
-            <!-- The game canvas.....................................-->
-
-            <canvas id='game-canvas' width='800' height='400'>
-               Your browser does not support HTML5 Canvas.
-            </canvas>
-         </div>
+  <head>
+    <title>Prison Break</title>
+    <link rel='stylesheet' href='game.css'/>
+  </head>
+  <body>
+    <div id='wrapper'>
+      <div id='header'>
+        <div id='score'>0</div>
+        <div id='fps'>0</div>
       </div>
-
-      <!-- JavaScript................................................-->
-      
-      <script src='js/nextFrame.js'></script>
-      <script src='game.js'></script>
+      <div id='arena'>
+        <canvas id='game-canvas' width='800' height='400'>
+          Your browser does not support HTML5 Canvas.
+        </canvas>
+      </div>
+    </div>
+    <script src='js/nextFrame.js'></script>
+    <script src='game.js'></script>
   </body>
 </html>
