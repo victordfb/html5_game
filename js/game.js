@@ -21,12 +21,9 @@ StageOne.prototype = {
 
 function GameEngine(canvas, stage){
     this.context = canvas.getContext('2d');
-    this.lastAnimationFrameTime = 0;
-    this.lastFpsUpdateTime = 0;
     this.fps = 0;
-    this.fpsElement = document.getElementById("fps");
     this.velocityPace = 290;
-    this.runnerOffset = 40;
+    this.runnerOffset = stage.endThreshold();
     this.bgXAxis = 0;
     this.stage = stage;
     this.background = new Image();
@@ -58,17 +55,8 @@ GameEngine.prototype = {
     drawRunner: function() {
         this.context.drawImage(this.runnerImage, this.runnerOffset, 290);
     },
-    calculateFps: function(now) {
-        var fps = 1000 / (now - this.lastAnimationFrameTime);
-        this.lastAnimationFrameTime = now;
-        if (now - this.lastFpsUpdateTime > 1000) {
-            this.lastFpsUpdateTime = now;
-            this.fpsElement.innerHTML = this.fps.toFixed(0) + ' fps';
-        }
-        this.fps = fps; 
-    },
-    updateFrame: function(now){
-        this.calculateFps(now);
+    updateFrame: function(fps){
+        this.fps = fps;
         this.drawBackground();
         this.drawRunner();
     }    

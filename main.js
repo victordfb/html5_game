@@ -1,13 +1,26 @@
 function Html5GameLoop(gameEngine){
     this.gameEngine = gameEngine;
+    this.lastAnimationFrameTime = 0;
+    this.lastFpsUpdateTime = 0;
+    this.fpsElement = document.getElementById("fps");
 }
 Html5GameLoop.prototype = {
-    animate: function(now) { 
-        html5GameLoop.gameEngine.updateFrame(now);
-        this.requestNextAnimationFrame(html5GameLoop.animate);
+    animate: function(now) {
+        var fps = html5GameLoop.calculateFps(now);
+        html5GameLoop.gameEngine.updateFrame(fps);
+        requestNextAnimationFrame(html5GameLoop.animate);
     },
     startGame: function() {
         requestNextAnimationFrame(this.animate);
+    },
+    calculateFps: function(now) {
+        var fps = 1000 / (now - this.lastAnimationFrameTime);
+        this.lastAnimationFrameTime = now;
+        if (now - this.lastFpsUpdateTime > 1000) {
+            this.lastFpsUpdateTime = now;
+            this.fpsElement.innerHTML = fps.toFixed(0) + ' fps';
+        }
+        return fps; 
     }
 }
 
