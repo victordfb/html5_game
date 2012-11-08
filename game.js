@@ -1,106 +1,104 @@
 function StageOne(){
-  return {
-	bgXAxis: 0,
-
+    this.bgXAxis = 0;
+}
+StageOne.prototype = {
     incrementBgXAxis: function(val){
-		this.bgXAxis += val;
-	},
+        this.bgXAxis += val;
+    },
     getBgXAxis: function(){
-		return this.bgXAxis;
+        return this.bgXAxis;
 	},
     startThreshold: function(){
-		return 300;
-	},
-	endThreshold: function(){
-		return 40;
-	},
+        return 300;
+    },
+    endThreshold: function(){
+        return 40;
+    },
     background: function(){
-		return "images/background.png";
-	}
-  }
-}
-
-var canvas = document.getElementById('game-canvas'),
-context = canvas.getContext('2d'),
-lastAnimationFrameTime = 0,
-lastFpsUpdateTime = 0,
-fps = 60,
-fpsElement = document.getElementById("fps"),
-velocityPace = 290,
-runnerOffset = 40,
-bgXAxis = 0,
-stage = new StageOne(),
-background = new Image(),
-runnerImage = new Image();
-
-function drawBackground() {
-	context.drawImage(background, stage.getBgXAxis(), 0);
-}
-
-function moveToLeft(){
-	var pace = velocityPace/fps;
-	if(runnerOffset > stage.startThreshold()){
-		stage.incrementBgXAxis(-pace);
-	}else{
-		runnerOffset += pace;
+        return "images/background.png";
 	}
 }
 
-function moveToRight(){
-	var pace = velocityPace/fps;
-	if(runnerOffset <= stage.endThreshold()){
-		stage.incrementBgXAxis(pace);
-	}else{
-		runnerOffset -= pace;
-	}
+function GameEngine(canvas, stage){
+    this.context = canvas.getContext('2d');
+    this.lastAnimationFrameTime = 0;
+    this.lastFpsUpdateTime = 0;
+    this.fps = 0;
+    this.fpsElement = document.getElementById("fps");
+    this.velocityPace = 290;
+    this.runnerOffset = 40;
+    this.bgXAxis = 0;
+    this.stage = stage;
+    this.background = new Image();
+    this.background.src = stage.background();
+    this.runnerImage = new Image();
+    this.runnerImage.src = 'images/runner.png';
 }
 
-function drawRunner() {
-    context.drawImage(runnerImage, runnerOffset, 290);
+GameEngine.prototype = {
+    drawBackground: function() {
+        this.context.drawImage(this.background, this.stage.getBgXAxis(), 0);
+    },
+    moveToLeft: function (){
+        var pace = this.velocityPace/this.fps;
+        if(this.runnerOffset > this.stage.startThreshold()){
+            this.stage.incrementBgXAxis(-pace);
+        }else{
+            this.runnerOffset += pace;
+        }
+    },
+    moveToRight: function (){
+        var pace = this.velocityPace/this.fps;
+        if(this.runnerOffset <= this.stage.endThreshold()){
+            this.stage.incrementBgXAxis(pace);
+        }else{
+            this.runnerOffset -= pace;
+        }
+    },
+    drawRunner: function() {
+        this.context.drawImage(this.runnerImage, this.runnerOffset, 290);
+    },
+    calculateFps: function(now) {
+        var fps = 1000 / (now - this.lastAnimationFrameTime);
+        this.lastAnimationFrameTime = now;
+        if (now - this.lastFpsUpdateTime > 1000) {
+            this.lastFpsUpdateTime = now;
+            this.fpsElement.innerHTML = this.fps.toFixed(0) + ' fps';
+        }
+        this.fps = fps; 
+    },
+    updateFrame: function(now){
+        this.calculateFps(now);
+        this.drawBackground();
+        this.drawRunner();
+    }    
 }
 
-function runGame(){
-    drawBackground();
-    drawRunner();
+function Html5GameLoop(gameEngine){
+    this.gameEngine = gameEngine;
 }
-
-function calculateFps(now) {
-    var fps = 1000 / (now - lastAnimationFrameTime);
-    lastAnimationFrameTime = now;
-
-    if (now - lastFpsUpdateTime > 1000) {
-	lastFpsUpdateTime = now;
-	fpsElement.innerHTML = fps.toFixed(0) + ' fps';
-    }
-    return fps; 
-}
-
-function animate(now) { 
-   fps = calculateFps(now); 
-   runGame();
-   requestNextAnimationFrame(animate);
-}
-
-function initializeImages() {
-    background.src = stage.background();
-    runnerImage.src = 'images/runner.png';
-    background.onload = function(e){
-	  startGame();
+Html5GameLoop.prototype = {
+    animate: function(now) { 
+        html5GameLoop.gameEngine.updateFrame(now);
+        this.requestNextAnimationFrame(html5GameLoop.animate);
+    },
+    startGame: function() {
+        requestNextAnimationFrame(this.animate);
     }
 }
 
-function startGame() {
-   window.requestNextAnimationFrame(animate);
-}
+var canvas = document.getElementById('game-canvas');
+var gameEngine = new GameEngine(canvas, new StageOne());
+var html5GameLoop = new Html5GameLoop(gameEngine);
 
-initializeImages();
+html5GameLoop.startGame();
 
 window.onkeydown = function(e){
     var key = e.keyCode;
     if(key == 39){
-	moveToLeft();
+        gameEngine.moveToLeft();
     }
     if(key == 37){
-	moveToRight();
+        gameEngine.moveToRight();
     }
 }
