@@ -1,43 +1,39 @@
 function StageOne(){
     this.bgXAxis = 0;
+    this.groundThreshold = 290;
+    this.startThreshold = 300;
+    this.endThreshold = 40;
+    this.bg = new Image();
+    this.bg.src = "images/background.png";
 }
 StageOne.prototype = {
     incrementBgXAxis: function(val){
         this.bgXAxis += val;
-    },
-    getBgXAxis: function(){
-        return this.bgXAxis;
-	},
-    groundThreshold: function(){
-        return 290;
-    },
-    startThreshold: function(){
-        return 300;
-    },
-    endThreshold: function(){
-        return 40;
-    },
-    background: function(){
-        return "images/background.png";
     }
 }
 
-function GameEngine(canvas, stage){
+function Runner(){
+    this.image = new Image();
+    this.image.src = 'images/runner.png';
+    this.xAxis = 40;
+    this.yAxis = 250;
+    this.paceVelocity = 230;
+}
+Runner.prototype = {
+    plusXAxis: function(pace){
+	this.xAxis += pace;
+    }
+}
+
+function GameEngine(canvas, stage, runner){
     this.context = canvas.getContext('2d');
     this.fps = 0;
-    this.velocityPace = 230;
-    this.runnerOffset = stage.endThreshold();
     this.bgXAxis = 0;
     this.stage = stage;
-    this.background = new Image();
-    this.background.src = stage.background();
-    this.runnerImage = new Image();
-    this.runnerImage.src = 'images/runner.png';
-    this.runnerXAxis = stage.groundThreshold();
+    this.runner = runner;
     this.movingToLeft = false;
     this.movingToRight = false;
 }
-
 GameEngine.prototype = {
     //PUBLIC
     updateFrame: function(fps){
@@ -58,23 +54,20 @@ GameEngine.prototype = {
         this.movingToRight = false;
     },
     //PRIVATE
-    jump: function(){
-        this.runnerXAxis -= 10;
-    },
     moveToLeft: function (){
-        var pace = this.velocityPace/this.fps;
-        if(this.runnerOffset > this.stage.startThreshold()){
+        var pace = this.runner.paceVelocity / this.fps;
+        if(this.runner.xAxis > this.stage.startThreshold){
             this.stage.incrementBgXAxis(-pace);
         }else{
-            this.runnerOffset += pace;
+            this.runner.plusXAxis(pace);
         }
     },
     moveToRight: function (){
-        var pace = this.velocityPace/this.fps;
-        if(this.runnerOffset <= this.stage.endThreshold()){
+        var pace = this.runner.paceVelocity / this.fps;
+        if(this.runner.xAxis <= this.stage.endThreshold){
             this.stage.incrementBgXAxis(pace);
         }else{
-            this.runnerOffset -= pace;
+            this.runner.plusXAxis(-pace);
         }
     },
     moveRunner: function(){
@@ -83,14 +76,14 @@ GameEngine.prototype = {
         if(this.movingToRight)
             this.moveToRight();
     },
-    drawBackground: function() {
-        this.context.drawImage(this.background, this.stage.getBgXAxis(), 0);
-    },
     calculateGroundPos: function(){
-        return this.runnerXAxis;
+        return this.runner.yAxis;
+    },
+    drawBackground: function() {
+        this.context.drawImage(this.stage.bg, this.stage.bgXAxis, 0);
     },
     drawRunner: function() {
         this.moveRunner();
-        this.context.drawImage(this.runnerImage, this.runnerOffset, this.calculateGroundPos());
+        this.context.drawImage(this.runner.image, this.runner.xAxis, this.calculateGroundPos());
     }
 }

@@ -25,7 +25,7 @@ Html5GameLoop.prototype = {
 }
 
 var canvas = document.getElementById('game-canvas');
-var gameEngine = new GameEngine(canvas, new StageOne());
+var gameEngine = new GameEngine(canvas, new StageOne(), new Runner());
 var html5GameLoop = new Html5GameLoop(gameEngine);
 
 html5GameLoop.startGame();
