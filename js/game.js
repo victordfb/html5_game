@@ -19,7 +19,7 @@ StageOne.prototype = {
     },
     background: function(){
         return "images/background.png";
-	}
+    }
 }
 
 function GameEngine(canvas, stage){
@@ -34,30 +34,30 @@ function GameEngine(canvas, stage){
     this.runnerImage = new Image();
     this.runnerImage.src = 'images/runner.png';
     this.runnerXAxis = stage.groundThreshold();
-	this.movingToLeft = false;
-	this.movingToRight = false;
+    this.movingToLeft = false;
+    this.movingToRight = false;
 }
 
 GameEngine.prototype = {
-	//PUBLIC
-	updateFrame: function(fps){
+    //PUBLIC
+    updateFrame: function(fps){
         this.fps = fps;
         this.drawBackground();
         this.drawRunner();
     },
-	startMoveLeft: function(){
-		this.movingToLeft = true;
-	},
-	stopMoveLeft: function(){
-		this.movingToLeft = false;
-	},
-	startMoveRight: function(){
-		this.movingToRight = true;
-	},
-	stopMoveRight: function(){
-		this.movingToRight = false;
-	},
-	//PRIVATE
+    startMoveLeft: function(){
+        this.movingToLeft = true;
+    },
+    stopMoveLeft: function(){
+        this.movingToLeft = false;
+    },
+    startMoveRight: function(){
+        this.movingToRight = true;
+    },
+    stopMoveRight: function(){
+        this.movingToRight = false;
+    },
+    //PRIVATE
     jump: function(){
         this.runnerXAxis -= 10;
     },
@@ -77,12 +77,12 @@ GameEngine.prototype = {
             this.runnerOffset -= pace;
         }
     },
-	moveRunner: function(){
-		if(this.movingToLeft)
-			this.moveToLeft();
-		if(this.movingToRight)
-			this.moveToRight();
-	},
+    moveRunner: function(){
+        if(this.movingToLeft)
+            this.moveToLeft();
+        if(this.movingToRight)
+            this.moveToRight();
+    },
     drawBackground: function() {
         this.context.drawImage(this.background, this.stage.getBgXAxis(), 0);
     },
@@ -90,7 +90,7 @@ GameEngine.prototype = {
         return this.runnerXAxis;
     },
     drawRunner: function() {
-		this.moveRunner();
+        this.moveRunner();
         this.context.drawImage(this.runnerImage, this.runnerOffset, this.calculateGroundPos());
     }
 }
