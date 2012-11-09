@@ -33,9 +33,22 @@ html5GameLoop.startGame();
 window.onkeydown = function(e){
     var key = e.keyCode;
     if(key == 39){
-        gameEngine.moveToLeft();
+        gameEngine.startMoveLeft();
     }
     if(key == 37){
-        gameEngine.moveToRight();
+        gameEngine.startMoveRight();
+    }
+    if(key == 32){
+        gameEngine.jump();
+    }
+}
+
+window.onkeyup = function(e){
+    var key = e.keyCode;
+    if(key == 39){
+        gameEngine.stopMoveLeft();
+    }
+    if(key == 37){
+        gameEngine.stopMoveRight();
     }
 }

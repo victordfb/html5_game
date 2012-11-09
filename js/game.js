@@ -8,6 +8,9 @@ StageOne.prototype = {
     getBgXAxis: function(){
         return this.bgXAxis;
 	},
+    groundThreshold: function(){
+        return 290;
+    },
     startThreshold: function(){
         return 300;
     },
@@ -22,7 +25,7 @@ StageOne.prototype = {
 function GameEngine(canvas, stage){
     this.context = canvas.getContext('2d');
     this.fps = 0;
-    this.velocityPace = 290;
+    this.velocityPace = 230;
     this.runnerOffset = stage.endThreshold();
     this.bgXAxis = 0;
     this.stage = stage;
@@ -30,11 +33,33 @@ function GameEngine(canvas, stage){
     this.background.src = stage.background();
     this.runnerImage = new Image();
     this.runnerImage.src = 'images/runner.png';
+    this.runnerXAxis = stage.groundThreshold();
+	this.movingToLeft = false;
+	this.movingToRight = false;
 }
 
 GameEngine.prototype = {
-    drawBackground: function() {
-        this.context.drawImage(this.background, this.stage.getBgXAxis(), 0);
+	//PUBLIC
+	updateFrame: function(fps){
+        this.fps = fps;
+        this.drawBackground();
+        this.drawRunner();
+    },
+	startMoveLeft: function(){
+		this.movingToLeft = true;
+	},
+	stopMoveLeft: function(){
+		this.movingToLeft = false;
+	},
+	startMoveRight: function(){
+		this.movingToRight = true;
+	},
+	stopMoveRight: function(){
+		this.movingToRight = false;
+	},
+	//PRIVATE
+    jump: function(){
+        this.runnerXAxis -= 10;
     },
     moveToLeft: function (){
         var pace = this.velocityPace/this.fps;
@@ -52,12 +77,20 @@ GameEngine.prototype = {
             this.runnerOffset -= pace;
         }
     },
-    drawRunner: function() {
-        this.context.drawImage(this.runnerImage, this.runnerOffset, 290);
+	moveRunner: function(){
+		if(this.movingToLeft)
+			this.moveToLeft();
+		if(this.movingToRight)
+			this.moveToRight();
+	},
+    drawBackground: function() {
+        this.context.drawImage(this.background, this.stage.getBgXAxis(), 0);
     },
-    updateFrame: function(fps){
-        this.fps = fps;
-        this.drawBackground();
-        this.drawRunner();
-    }    
+    calculateGroundPos: function(){
+        return this.runnerXAxis;
+    },
+    drawRunner: function() {
+		this.moveRunner();
+        this.context.drawImage(this.runnerImage, this.runnerOffset, this.calculateGroundPos());
+    }
 }
