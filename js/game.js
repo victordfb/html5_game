@@ -1,34 +1,8 @@
-function StageOne(){
-    this.bgXAxis = 0;
-    this.groundThreshold = 290;
-    this.startThreshold = 300;
-    this.endThreshold = 40;
-    this.bg = new Image();
-    this.bg.src = "images/background.png";
-}
-StageOne.prototype = {
-    incrementBgXAxis: function(val){
-        this.bgXAxis += val;
-    }
-}
-
-function Runner(){
-    this.image = new Image();
-    this.image.src = 'images/runner.png';
-    this.xAxis = 40;
-    this.yAxis = 250;
-    this.paceVelocity = 230;
-}
-Runner.prototype = {
-    plusXAxis: function(pace){
-	this.xAxis += pace;
-    }
-}
-
 function GameEngine(canvas, stage, runner){
     this.context = canvas.getContext('2d');
-    this.fps = 0;
-    this.bgXAxis = 0;
+    this.fps = 60;
+    this.jumpForce = 0;
+    this.gravityForce = 280;
     this.stage = stage;
     this.runner = runner;
     this.movingToLeft = false;
@@ -57,7 +31,7 @@ GameEngine.prototype = {
     moveToLeft: function (){
         var pace = this.runner.paceVelocity / this.fps;
         if(this.runner.xAxis > this.stage.startThreshold){
-            this.stage.incrementBgXAxis(-pace);
+            this.stage.plusBgXAxis(-pace);
         }else{
             this.runner.plusXAxis(pace);
         }
@@ -65,7 +39,7 @@ GameEngine.prototype = {
     moveToRight: function (){
         var pace = this.runner.paceVelocity / this.fps;
         if(this.runner.xAxis <= this.stage.endThreshold){
-            this.stage.incrementBgXAxis(pace);
+            this.stage.plusBgXAxis(pace);
         }else{
             this.runner.plusXAxis(-pace);
         }
@@ -75,15 +49,25 @@ GameEngine.prototype = {
             this.moveToLeft();
         if(this.movingToRight)
             this.moveToRight();
+	this.applyGravity();
     },
-    calculateGroundPos: function(){
-        return this.runner.yAxis;
+    jump: function(){
+	this.jumpForce = 850;
+    },
+    applyGravity: function(){
+	var pace = (this.gravityForce - this.jumpForce) / this.fps;
+	if(this.jumpForce > 0){
+	    this.jumpForce -= 40;
+	}
+	if(this.runner.yAxis+pace < this.stage.groundThreshold){
+	    this.runner.yAxis += pace;
+	}
     },
     drawBackground: function() {
         this.context.drawImage(this.stage.bg, this.stage.bgXAxis, 0);
     },
     drawRunner: function() {
         this.moveRunner();
-        this.context.drawImage(this.runner.image, this.runner.xAxis, this.calculateGroundPos());
+        this.context.drawImage(this.runner.image, this.runner.xAxis, this.runner.yAxis);
     }
 }
