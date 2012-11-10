@@ -52,13 +52,16 @@ GameEngine.prototype = {
 	this.applyGravity();
     },
     jump: function(){
-	this.jumpForce = 850;
+	if(this.stage.groundThreshold - this.runner.yAxis <= 5)
+	    this.jumpForce = 850;
     },
     applyGravity: function(){
-	var pace = (this.gravityForce - this.jumpForce) / this.fps;
 	if(this.jumpForce > 0){
 	    this.jumpForce -= 40;
+	    if(this.jumpForce < 0)
+		this.jumpForce = 0;
 	}
+	var pace = (this.gravityForce - this.jumpForce) / this.fps;
 	if(this.runner.yAxis+pace < this.stage.groundThreshold){
 	    this.runner.yAxis += pace;
 	}
